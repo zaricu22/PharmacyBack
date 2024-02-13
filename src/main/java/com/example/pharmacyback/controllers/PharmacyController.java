@@ -33,4 +33,9 @@ public class PharmacyController {
         }
 
     }
+
+    @GetMapping(value = "/getTest")
+    public String getTest(HttpServletResponse response) throws IOException {
+        return "Sucessfull GET!";
+    }
 }
