@@ -1,14 +1,12 @@
 package com.example.pharmacyback.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 
 import java.util.List;
 
-@Entity (name = "manufacturers")
+@Entity
+@Table(name = "manufacturers", schema = "pharmacy")
 public class Manufacturer {
 
     @Id

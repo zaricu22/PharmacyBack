@@ -4,14 +4,15 @@ import jakarta.persistence.*;
 
 import java.util.Date;
 
-@Entity(name = "products")
+@Entity
+@Table(name = "products", schema = "pharmacy")
 public class Product {
 
     @Id
     int id;
     String name;
     @ManyToOne
-    @JoinColumn(name="manufacturer_id", referencedColumnName="id")
+    @JoinColumn(name="manufacturer", referencedColumnName="id")
     Manufacturer manufacturer;
     int price;
     @Temporal(TemporalType.TIMESTAMP)
