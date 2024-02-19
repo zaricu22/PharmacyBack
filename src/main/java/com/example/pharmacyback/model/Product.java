@@ -1,15 +1,18 @@
 package com.example.pharmacyback.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.util.Date;
+import java.util.UUID;
 
 @Entity
 @Table(name = "products", schema = "pharmacy")
 public class Product {
 
     @Id
-    private int id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
     private String name;
     @ManyToOne
     @JoinColumn(name="manufacturer", referencedColumnName="id")
@@ -21,7 +24,7 @@ public class Product {
     public Product() {
     }
 
-    public Product(int id, String name, Manufacturer manufacturer, int price, Date expiryDate) {
+    public Product(UUID id, String name, Manufacturer manufacturer, int price, Date expiryDate) {
         this.id = id;
         this.name = name;
         this.manufacturer = manufacturer;
@@ -29,11 +32,11 @@ public class Product {
         this.expiryDate = expiryDate;
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

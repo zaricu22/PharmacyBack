@@ -5,12 +5,12 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
-public interface ProductRepository extends CrudRepository<Product, Integer> {
+public interface ProductRepository extends CrudRepository<Product, UUID> {
     List<Product> findAll();
 
-    @Override
-    void deleteById(Integer id);
+    void deleteById(UUID id);
 
     @Override
     Product save(Product entity);

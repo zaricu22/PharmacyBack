@@ -4,13 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "manufacturers", schema = "pharmacy")
 public class Manufacturer {
 
     @Id
-    private int id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
     private String name;
 
     @OneToMany(mappedBy="manufacturer")
@@ -20,16 +22,16 @@ public class Manufacturer {
     public Manufacturer() {
     }
 
-    public Manufacturer(int id, String name) {
+    public Manufacturer(UUID id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
