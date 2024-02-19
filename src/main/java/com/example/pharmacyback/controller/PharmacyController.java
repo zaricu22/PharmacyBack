@@ -1,13 +1,11 @@
-package com.example.pharmacyback.controllers;
+package com.example.pharmacyback.controller;
 
-import com.example.pharmacyback.crud.ManufacturerRepository;
-import com.example.pharmacyback.crud.ProductRepository;
+import com.example.pharmacyback.repository.ManufacturerRepository;
+import com.example.pharmacyback.repository.ProductRepository;
 import com.example.pharmacyback.model.Product;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.boot.json.JsonParserFactory;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -15,11 +13,15 @@ import java.util.List;
 @CrossOrigin
 @RestController
 public class PharmacyController {
-    @Autowired
-    ProductRepository productRepository;
 
-    @Autowired
-    ManufacturerRepository manufacturerRepository;
+    private final ProductRepository productRepository;
+
+    private final ManufacturerRepository manufacturerRepository;
+
+    public PharmacyController(ProductRepository productRepository, ManufacturerRepository manufacturerRepository) {
+        this.productRepository = productRepository;
+        this.manufacturerRepository = manufacturerRepository;
+    }
 
     @GetMapping(value = "/getAllProducts")
     public List<Product> getAllProducts(HttpServletResponse response) throws IOException {
@@ -34,8 +36,21 @@ public class PharmacyController {
 
     }
 
-    @GetMapping(value = "/getTest")
-    public String getTest(HttpServletResponse response) throws IOException {
-        return "Sucessfull GET!";
+    @PostMapping(value = "/deleteProduct")
+    public String getTest(HttpServletResponse response, @RequestBody Integer id) throws IOException {
+        productRepository.deleteById(id);
+
+        return "Sucessfull DELETE!";
+    }
+
+    @PostMapping(value = "/saveProduct")
+    public String getTest(HttpServletResponse response, @RequestBody Product product) throws IOException {
+        Product prod = productRepository.save(product);
+        if(prod != null) {
+            return "Sucessfull SAVE!";
+        } else {
+            response.sendError(401, "Trouble with getting list of all products!");
+            return null;
+        }
     }
 }

@@ -9,14 +9,14 @@ import java.util.Date;
 public class Product {
 
     @Id
-    int id;
-    String name;
+    private int id;
+    private String name;
     @ManyToOne
     @JoinColumn(name="manufacturer", referencedColumnName="id")
-    Manufacturer manufacturer;
+    private Manufacturer manufacturer;
     int price;
     @Temporal(TemporalType.TIMESTAMP)
-    Date expiryDate;
+    private Date expiryDate;
 
     public Product() {
     }

@@ -1,4 +1,4 @@
-package com.example.pharmacyback.crud;
+package com.example.pharmacyback.repository;
 
 import com.example.pharmacyback.model.Manufacturer;
 import org.springframework.data.repository.CrudRepository;

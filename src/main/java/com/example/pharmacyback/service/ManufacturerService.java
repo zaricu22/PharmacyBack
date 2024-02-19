@@ -1,16 +1,19 @@
-package com.example.pharmacyback.services;
+package com.example.pharmacyback.service;
 
 import com.example.pharmacyback.repository.ManufacturerRepository;
 import com.example.pharmacyback.model.Manufacturer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class ManufacturerService {
-    @Autowired
-    ManufacturerRepository manufacturerRepository;
+
+    private final ManufacturerRepository manufacturerRepository;
+
+    public ManufacturerService(ManufacturerRepository manufacturerRepository) {
+        this.manufacturerRepository = manufacturerRepository;
+    }
 
     List<Manufacturer> getAllProducts() {
         try {

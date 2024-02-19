@@ -10,8 +10,8 @@ import java.util.List;
 public class Manufacturer {
 
     @Id
-    int id;
-    String name;
+    private int id;
+    private String name;
 
     @OneToMany(mappedBy="manufacturer")
     @JsonIgnore
