@@ -15,7 +15,7 @@ public class ManufacturerService {
         this.manufacturerRepository = manufacturerRepository;
     }
 
-    List<Manufacturer> getAllProducts() {
+    public List<Manufacturer> getAllManufacturers() {
         try {
             return manufacturerRepository.findAll();
         } catch (Exception e) {

@@ -5,6 +5,7 @@ import com.example.pharmacyback.model.Product;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ProductService {
@@ -15,7 +16,7 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    List<Product> getAllProducts() {
+    public List<Product> getAllProducts() {
         try {
             return productRepository.findAll();
         } catch (Exception e) {
@@ -23,7 +24,15 @@ public class ProductService {
         }
     }
 
-    void deleteProduct(Integer id) {
+    public Product getProductById(UUID uuid) {
+        try {
+            return productRepository.findProductById(uuid);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public void deleteProduct(UUID id) {
         try {
             productRepository.deleteById(id);
         } catch (Exception e) {
@@ -31,8 +40,9 @@ public class ProductService {
         }
     }
 
-    Product saveProduct(Product product) {
+    public Product saveProduct(Product product) {
         try {
+            System.out.println(product);
             return productRepository.save(product);
         } catch (Exception e) {
             return null;

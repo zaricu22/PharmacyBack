@@ -10,6 +10,8 @@ import java.util.UUID;
 public interface ProductRepository extends CrudRepository<Product, UUID> {
     List<Product> findAll();
 
+    Product findProductById(UUID id);
+
     void deleteById(UUID id);
 
     @Override
