@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @CrossOrigin
@@ -46,11 +47,44 @@ public class PharmacyController {
         }
     }
 
+    @GetMapping(value = "/products/price/top-five")
+    public List<Product> getTopFiveProductByPrice(HttpServletResponse response) throws IOException {
+        List<Product> allProducts = productService.getTopFiveProductByPrice();
+        if(allProducts != null) {
+            return allProducts;
+        } else {
+            response.sendError(401, "Trouble with getting list of all products!");
+            return null;
+        }
+    }
+
+    @GetMapping(value = "/products/price/least-five")
+    public List<Product> getLeastFiveProductByPrice(HttpServletResponse response) throws IOException {
+        List<Product> allProducts = productService.getLeastFiveProductByPrice();
+        if(allProducts != null) {
+            return allProducts;
+        } else {
+            response.sendError(401, "Trouble with getting list of all products!");
+            return null;
+        }
+    }
+
     @GetMapping(value = "/manufacturers")
     public List<Manufacturer> getAllManufacturers(HttpServletResponse response) throws IOException {
         List<Manufacturer> allManufacturers = manufacturerService.getAllManufacturers();
         if(allManufacturers != null) {
             return allManufacturers;
+        } else {
+            response.sendError(401, "Trouble with getting list of all products!");
+            return null;
+        }
+    }
+
+    @GetMapping(value = "/manufacturers/products")
+    public List<Map<String, Integer>> getManufacturersWithProducts(HttpServletResponse response) throws IOException {
+        List<Map<String, Integer>> manusWithProducts = manufacturerService.countManufacturersProducts();
+        if(manusWithProducts != null) {
+            return manusWithProducts;
         } else {
             response.sendError(401, "Trouble with getting list of all products!");
             return null;

@@ -1,13 +1,13 @@
 package com.example.pharmacyback.repository;
 
 import com.example.pharmacyback.model.Product;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.UUID;
 
-public interface ProductRepository extends CrudRepository<Product, UUID> {
+public interface ProductRepository extends JpaRepository<Product, UUID> {
     List<Product> findAll();
 
     Product findProductById(UUID id);
@@ -16,4 +16,21 @@ public interface ProductRepository extends CrudRepository<Product, UUID> {
 
     @Override
     Product save(Product entity);
+
+    @Query(value = "" +
+            "SELECT * " +
+            "FROM Pharmacy.Products p " +
+            "ORDER BY p.price ASC " +
+            "LIMIT 5"
+        , nativeQuery = true)
+    List<Product> findAllOrderByPriceAsc();
+
+    @Query(value = "" +
+            "SELECT * " +
+            "FROM Pharmacy.Products p " +
+            "ORDER BY p.price DESC " +
+            "LIMIT 5"
+        , nativeQuery = true)
+    List<Product> findAllOrderByPriceDesc();
+
 }

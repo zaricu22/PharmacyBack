@@ -1,6 +1,5 @@
 package com.example.pharmacyback.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.util.Date;

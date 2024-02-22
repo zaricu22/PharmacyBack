@@ -1,7 +1,7 @@
 package com.example.pharmacyback.service;
 
-import com.example.pharmacyback.repository.ProductRepository;
 import com.example.pharmacyback.model.Product;
+import com.example.pharmacyback.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,6 +27,22 @@ public class ProductService {
     public Product getProductById(UUID uuid) {
         try {
             return productRepository.findProductById(uuid);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public List<Product> getTopFiveProductByPrice() {
+        try {
+            return productRepository.findAllOrderByPriceDesc();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public List<Product> getLeastFiveProductByPrice() {
+        try {
+            return productRepository.findAllOrderByPriceAsc();
         } catch (Exception e) {
             return null;
         }
