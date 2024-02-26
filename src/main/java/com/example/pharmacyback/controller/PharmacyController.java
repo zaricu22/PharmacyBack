@@ -5,6 +5,8 @@ import com.example.pharmacyback.model.Product;
 import com.example.pharmacyback.service.ManufacturerService;
 import com.example.pharmacyback.service.ProductService;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -26,84 +28,57 @@ public class PharmacyController {
     }
 
     @GetMapping(value = "/products")
-    public List<Product> getAllProducts(HttpServletResponse response) throws IOException {
+    public ResponseEntity<?> getAllProducts() {
         List<Product> allProducts = productService.getAllProducts();
-        if(allProducts != null) {
-            return allProducts;
-        } else {
-            response.sendError(401, "Trouble with getting list of all products!");
-            return null;
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(allProducts);
     }
 
     @GetMapping(value = "/products/{id}")
-    public Product getProductById(HttpServletResponse response, @PathVariable("id") UUID uuid) throws IOException {
-        Product product = productService.getProductById(uuid);
-        if(product != null) {
-            return product;
-        } else {
-            response.sendError(401, "Trouble with getting list of all products!");
-            return null;
-        }
+    public ResponseEntity<?> getProductById(@PathVariable("id") UUID uuid) {
+        Product productById = productService.getProductById(uuid);
+        return ResponseEntity.status(HttpStatus.OK).body(productById);
     }
 
     @GetMapping(value = "/products/price/top-five")
-    public List<Product> getTopFiveProductByPrice(HttpServletResponse response) throws IOException {
-        List<Product> allProducts = productService.getTopFiveProductByPrice();
-        if(allProducts != null) {
-            return allProducts;
-        } else {
-            response.sendError(401, "Trouble with getting list of all products!");
-            return null;
-        }
+    public ResponseEntity<?> getTopFiveProductByPrice() {
+        List<Product> topFiveProducts = productService.getTopFiveProductByPrice();
+        return ResponseEntity.status(HttpStatus.OK).body(topFiveProducts);
     }
 
     @GetMapping(value = "/products/price/least-five")
-    public List<Product> getLeastFiveProductByPrice(HttpServletResponse response) throws IOException {
-        List<Product> allProducts = productService.getLeastFiveProductByPrice();
-        if(allProducts != null) {
-            return allProducts;
-        } else {
-            response.sendError(401, "Trouble with getting list of all products!");
-            return null;
-        }
+    public ResponseEntity<?> getLeastFiveProductByPrice() {
+        List<Product> leastFiveProducts = productService.getLeastFiveProductByPrice();
+        return ResponseEntity.status(HttpStatus.OK).body(leastFiveProducts);
     }
 
     @GetMapping(value = "/manufacturers")
-    public List<Manufacturer> getAllManufacturers(HttpServletResponse response) throws IOException {
+    public ResponseEntity<?> getAllManufacturers() {
         List<Manufacturer> allManufacturers = manufacturerService.getAllManufacturers();
-        if(allManufacturers != null) {
-            return allManufacturers;
-        } else {
-            response.sendError(401, "Trouble with getting list of all products!");
-            return null;
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(allManufacturers);
     }
 
     @GetMapping(value = "/manufacturers/products")
-    public List<Map<String, Integer>> getManufacturersWithProducts(HttpServletResponse response) throws IOException {
+    public ResponseEntity<?> getManufacturersWithProducts() {
         List<Map<String, Integer>> manusWithProducts = manufacturerService.countManufacturersProducts();
-        if(manusWithProducts != null) {
-            return manusWithProducts;
-        } else {
-            response.sendError(401, "Trouble with getting list of all products!");
-            return null;
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(manusWithProducts);
     }
 
     @PostMapping(value = "/products")
-    public void saveProduct(HttpServletResponse response, @RequestBody Product product) throws IOException {
+    public ResponseEntity<?> saveProduct(@RequestBody Product product) {
         Product prod = productService.saveProduct(product);
+        return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
 
     @PutMapping(value = "/products/{id}")
-    public void updateProduct(HttpServletResponse response, @PathVariable("id") UUID uuid, @RequestBody Product product) throws IOException {
+    public ResponseEntity<?> updateProduct(@PathVariable("id") UUID uuid, @RequestBody Product product) {
         product.setId(uuid);
         Product prod = productService.saveProduct(product);
+        return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
 
     @DeleteMapping(value = "/products/{id}")
-    public void deleteProduct(HttpServletResponse response, @PathVariable("id") UUID id) throws IOException {
+    public ResponseEntity<?> deleteProduct(@PathVariable("id") UUID id) {
         productService.deleteProduct(id);
+        return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 }
