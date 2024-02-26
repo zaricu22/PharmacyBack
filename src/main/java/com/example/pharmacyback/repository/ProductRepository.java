@@ -4,13 +4,22 @@ import com.example.pharmacyback.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface ProductRepository extends JpaRepository<Product, UUID> {
     List<Product> findAll();
 
-    Product findProductById(UUID id);
+    @Query(value = "" +
+            "SELECT count(p.name) " +
+            "FROM Pharmacy.Products p " +
+            "WHERE p.name = :name AND p.expiry_date = :expiryDate"
+            , nativeQuery = true)
+    int countByNameAndExpiryDate(String name, Date expiryDate);
+
+    Optional<Product> findProductById(UUID id);
 
     void deleteById(UUID id);
 

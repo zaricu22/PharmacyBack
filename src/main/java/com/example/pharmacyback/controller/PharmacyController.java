@@ -64,15 +64,15 @@ public class PharmacyController {
     }
 
     @PostMapping(value = "/products")
-    public ResponseEntity<?> saveProduct(@RequestBody Product product) {
-        Product prod = productService.saveProduct(product);
+    public ResponseEntity<?> insertProduct(@RequestBody Product product) {
+        Product prod = productService.insertProduct(product);
         return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
 
     @PutMapping(value = "/products/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable("id") UUID uuid, @RequestBody Product product) {
         product.setId(uuid);
-        Product prod = productService.saveProduct(product);
+        Product prod = productService.updateProduct(product);
         return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
 

@@ -17,20 +17,10 @@ public class ManufacturerService {
     }
 
     public List<Manufacturer> getAllManufacturers() {
-        try {
-            return manufacturerRepository.findAll();
-        } catch (Exception e) {
-            return null;
-        }
+        return manufacturerRepository.findAll();
     }
 
     public List<Map<String, Integer>> countManufacturersProducts() {
-        try {
-            System.out.println(manufacturerRepository.countManufacturersProducts());
-            return manufacturerRepository.countManufacturersProducts();
-        } catch (Exception e) {
-            System.out.println();
-            return null;
-        }
+        return manufacturerRepository.countManufacturersProducts();
     }
 }
