@@ -8,6 +8,9 @@ import com.example.pharmacyback.exceptions.errors.WrongManudacturerException;
 import com.example.pharmacyback.model.Product;
 import com.example.pharmacyback.repository.ManufacturerRepository;
 import com.example.pharmacyback.repository.ProductRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -28,6 +31,18 @@ public class ProductService {
 
     public List<Product> getAllProducts() {
         return productRepository.findAll();
+    }
+
+    public List<Product> getProductsPage (int pageNumber, int pageSize, String sortBy, String sortDir) {
+        Sort.Direction dir;
+        Pageable pageable;
+        if(!sortBy.isEmpty() || !sortDir.isEmpty()) {
+            dir = sortDir.toLowerCase().contains("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+            pageable = PageRequest.of(pageNumber, pageSize, Sort.by(dir, sortBy));
+        } else {
+            pageable = PageRequest.of(pageNumber, pageSize);
+        }
+        return productRepository.findAll(pageable).getContent();
     }
 
     public Product getProductById(UUID uuid) {
