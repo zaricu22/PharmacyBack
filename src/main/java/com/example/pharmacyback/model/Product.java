@@ -1,6 +1,10 @@
 package com.example.pharmacyback.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.Date;
 import java.util.UUID;
@@ -12,12 +16,19 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    @NotBlank
     private String name;
+
     @ManyToOne
     @JoinColumn(name="manufacturer", referencedColumnName="id")
     private Manufacturer manufacturer;
+
+    @Min(value = 0)
     int price;
+
     @Temporal(TemporalType.TIMESTAMP)
+    @Future
     private Date expiryDate;
 
     public Product() {

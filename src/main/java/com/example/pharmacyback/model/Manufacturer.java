@@ -2,6 +2,7 @@ package com.example.pharmacyback.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.List;
 import java.util.UUID;
@@ -13,9 +14,11 @@ public class Manufacturer {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    @NotBlank
     private String name;
 
-    @OneToMany(mappedBy="manufacturer")
+    @OneToMany(mappedBy="manufacturer", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Product> products;
 

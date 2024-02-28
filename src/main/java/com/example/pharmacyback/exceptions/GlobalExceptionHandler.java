@@ -24,28 +24,21 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({HandlerMethodValidationException.class, MethodArgumentNotValidException.class})
     public ResponseEntity<Object> methodValidationExceptionExceptionHandler(Exception ex){
-        String excpMessage = ex.getMessage();
+        String excpMessage = "";
         if (ex instanceof MethodArgumentNotValidException) {
-            String[] messSplited =  excpMessage.split(";");
-            String wrongProperty = messSplited[messSplited.length-2]
-                    .substring(
-                            messSplited[messSplited.length-2].indexOf("[")+1,
-                            messSplited[messSplited.length-2].indexOf("]")
-                    );
-            String cause = messSplited[messSplited.length-1]
-                    .substring(
-                            messSplited[messSplited.length-1].indexOf("[")+1,
-                            messSplited[messSplited.length-1].indexOf("]")
-                    );
-            excpMessage = wrongProperty+": "+cause;
+            MethodArgumentNotValidException manvException = (MethodArgumentNotValidException)ex;
+            excpMessage = manvException.getFieldError().getField()+": "+manvException.getFieldError().getDefaultMessage();
         }
+        else
+            excpMessage = ((HandlerMethodValidationException)ex).getReason();
+
         System.out.println(ex);
         ex.printStackTrace();
         return buildErrorResponse(HttpStatus.BAD_REQUEST, excpMessage);
     }
 
     @ExceptionHandler(DataAccessException.class)
-    public ResponseEntity<Object> databaseAccessExceptionExceptionHandler(Exception ex){
+    public ResponseEntity<Object> databaseAccessExceptionExceptionHandler(DataAccessException ex){
         System.out.println(ex);
         ex.printStackTrace();
         return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ErrorMessages.DATABASE_ACCESS_EXCEPTION);
