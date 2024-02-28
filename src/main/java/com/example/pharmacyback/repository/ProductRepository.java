@@ -12,9 +12,20 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface ProductRepository extends JpaRepository<Product, UUID> {
+    @Override
     List<Product> findAll();
 
+    @Override
     Page<Product> findAll(Pageable pageable);
+
+    @Override
+    Optional<Product> findById(UUID id);
+
+    @Override
+    void deleteById(UUID id);
+
+    @Override
+    Product save(Product entity);
 
     @Query(value = "" +
             "SELECT count(p.name) " +
@@ -23,20 +34,13 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
             , nativeQuery = true)
     int countByNameAndExpiryDate(String name, Date expiryDate);
 
-    Optional<Product> findProductById(UUID id);
-
-    void deleteById(UUID id);
-
-    @Override
-    Product save(Product entity);
-
     @Query(value = "" +
             "SELECT * " +
             "FROM Pharmacy.Products p " +
             "ORDER BY p.price ASC " +
             "LIMIT 5"
         , nativeQuery = true)
-    List<Product> findAllOrderByPriceAsc();
+    List<Product> findFirstFiveOrderByPriceAsc();
 
     @Query(value = "" +
             "SELECT * " +
@@ -44,6 +48,6 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
             "ORDER BY p.price DESC " +
             "LIMIT 5"
         , nativeQuery = true)
-    List<Product> findAllOrderByPriceDesc();
+    List<Product> findFirstFiveOrderByPriceDesc();
 
 }

@@ -1,11 +1,12 @@
 package com.example.pharmacyback.service;
 
+import com.example.pharmacyback.dto.ManuWithProdDTO;
 import com.example.pharmacyback.model.Manufacturer;
 import com.example.pharmacyback.repository.ManufacturerRepository;
 import org.springframework.stereotype.Service;
+import com.example.pharmacyback.dto.CountManuProdDTO;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class ManufacturerService {
@@ -20,7 +21,11 @@ public class ManufacturerService {
         return manufacturerRepository.findAll();
     }
 
-    public List<Map<String, Integer>> countManufacturersProducts() {
+    public List<CountManuProdDTO> countManufacturersProducts() {
         return manufacturerRepository.countManufacturersProducts();
+    }
+
+    public List<ManuWithProdDTO> getManufacturersWithProducts() {
+        return manufacturerRepository.getManufacturersWithProducts();
     }
 }

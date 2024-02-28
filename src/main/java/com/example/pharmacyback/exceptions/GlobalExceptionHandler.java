@@ -8,6 +8,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
@@ -20,6 +21,13 @@ public class GlobalExceptionHandler {
         System.out.println(ex);
         ex.printStackTrace();
         return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ErrorMessages.DEFAULT_INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<Object> missingServletRequestParameterExceptionHandler(Exception ex){
+        System.out.println(ex);
+        ex.printStackTrace();
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     @ExceptionHandler({HandlerMethodValidationException.class, MethodArgumentNotValidException.class})
@@ -55,21 +63,21 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> productExistsExceptionHandler(Exception ex){
         System.out.println(ex);
         ex.printStackTrace();
-        return buildErrorResponse(HttpStatus.NOT_ACCEPTABLE, ErrorMessages.PRODUCT_EXISTS_EXCEPTION);
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ErrorMessages.PRODUCT_EXISTS_EXCEPTION);
     }
 
     @ExceptionHandler(DateExpiredException.class)
     public ResponseEntity<Object> dateExpiredExceptionHandler(Exception ex){
         System.out.println(ex);
         ex.printStackTrace();
-        return buildErrorResponse(HttpStatus.NOT_ACCEPTABLE, ErrorMessages.DATE_EXPIRED_EXCEPTION);
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ErrorMessages.DATE_EXPIRED_EXCEPTION);
     }
 
     @ExceptionHandler(WrongManudacturerException.class)
     public ResponseEntity<Object> wrongManufacturerExceptionHandler(Exception ex){
         System.out.println(ex);
         ex.printStackTrace();
-        return buildErrorResponse(HttpStatus.NOT_ACCEPTABLE, ErrorMessages.WRONG_MANUFACTURER_EXCEPTION);
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ErrorMessages.WRONG_MANUFACTURER_EXCEPTION);
     }
 
     private ResponseEntity<Object> buildErrorResponse(HttpStatus status, String message) {

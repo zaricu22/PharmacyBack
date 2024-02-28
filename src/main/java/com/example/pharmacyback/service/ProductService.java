@@ -13,10 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class ProductService {
@@ -36,9 +33,13 @@ public class ProductService {
     public List<Product> getProductsPage (int pageNumber, int pageSize, String sortBy, String sortDir) {
         Sort.Direction dir;
         Pageable pageable;
-        if(!sortBy.isEmpty() || !sortDir.isEmpty()) {
-            dir = sortDir.toLowerCase().contains("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
-            pageable = PageRequest.of(pageNumber, pageSize, Sort.by(dir, sortBy));
+        if(Objects.nonNull(sortBy) && !sortBy.isEmpty()) {
+            if(Objects.nonNull(sortDir) && !sortDir.isEmpty()) {
+                dir = sortDir.toLowerCase().contains("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+                pageable = PageRequest.of(pageNumber, pageSize, Sort.by(dir, sortBy));
+            } else {
+                pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy));
+            }
         } else {
             pageable = PageRequest.of(pageNumber, pageSize);
         }
@@ -46,16 +47,17 @@ public class ProductService {
     }
 
     public Product getProductById(UUID uuid) {
-        return productRepository.findProductById(uuid)
+        return productRepository.findById(uuid)
                 .orElseThrow(() -> new ProductNotFoundException(ErrorMessages.PRODUCT_NOT_FOUND_EXCEPTION));
     }
 
-    public List<Product> getTopFiveProductByPrice() {
-        return productRepository.findAllOrderByPriceDesc();
-    }
-
-    public List<Product> getLeastFiveProductByPrice() {
-        return productRepository.findAllOrderByPriceAsc();
+    public List<Product> getTopOrLeastFiveProductByPrice(String orderDir) {
+        if(Objects.nonNull(orderDir) && orderDir.toLowerCase().contains("top-five"))
+            return productRepository.findFirstFiveOrderByPriceDesc();
+        else if (Objects.nonNull(orderDir) && orderDir.toLowerCase().contains("least-five"))
+            return productRepository.findFirstFiveOrderByPriceAsc();
+        else
+            return new ArrayList<Product>();
     }
 
     public void deleteProduct(UUID id) {
