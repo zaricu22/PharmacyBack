@@ -16,71 +16,73 @@ import org.springframework.web.method.annotation.HandlerMethodValidationExceptio
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler({Exception.class, Throwable.class})
-    public ResponseEntity<Object> internalExceptionHandler(Exception ex){
-        System.out.println(ex);
-        ex.printStackTrace();
-        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ErrorMessages.DEFAULT_INTERNAL_SERVER_ERROR);
-    }
+  @ExceptionHandler({Exception.class, Throwable.class})
+  public ResponseEntity<Object> internalExceptionHandler(Exception ex) {
+    System.out.println(ex);
+    ex.printStackTrace();
+    return buildErrorResponse(
+        HttpStatus.INTERNAL_SERVER_ERROR, ErrorMessages.DEFAULT_INTERNAL_SERVER_ERROR);
+  }
 
-    @ExceptionHandler(MissingServletRequestParameterException.class)
-    public ResponseEntity<Object> missingServletRequestParameterExceptionHandler(Exception ex){
-        System.out.println(ex);
-        ex.printStackTrace();
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
-    }
+  @ExceptionHandler(MissingServletRequestParameterException.class)
+  public ResponseEntity<Object> missingServletRequestParameterExceptionHandler(Exception ex) {
+    System.out.println(ex);
+    ex.printStackTrace();
+    return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+  }
 
-    @ExceptionHandler({HandlerMethodValidationException.class, MethodArgumentNotValidException.class})
-    public ResponseEntity<Object> methodValidationExceptionExceptionHandler(Exception ex){
-        String excpMessage = "";
-        if (ex instanceof MethodArgumentNotValidException) {
-            MethodArgumentNotValidException manvException = (MethodArgumentNotValidException)ex;
-            excpMessage = manvException.getFieldError().getField()+": "+manvException.getFieldError().getDefaultMessage();
-        }
-        else
-            excpMessage = ((HandlerMethodValidationException)ex).getReason();
+  @ExceptionHandler({HandlerMethodValidationException.class, MethodArgumentNotValidException.class})
+  public ResponseEntity<Object> methodValidationExceptionExceptionHandler(Exception ex) {
+    String excpMessage = "";
+    if (ex instanceof MethodArgumentNotValidException manvException) {
+        excpMessage =
+          manvException.getFieldError().getField()
+              + ": "
+              + manvException.getFieldError().getDefaultMessage();
+    } else excpMessage = ((HandlerMethodValidationException) ex).getReason();
 
-        System.out.println(ex);
-        ex.printStackTrace();
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, excpMessage);
-    }
+    System.out.println(ex);
+    ex.printStackTrace();
+    return buildErrorResponse(HttpStatus.BAD_REQUEST, excpMessage);
+  }
 
-    @ExceptionHandler(DataAccessException.class)
-    public ResponseEntity<Object> databaseAccessExceptionExceptionHandler(DataAccessException ex){
-        System.out.println(ex);
-        ex.printStackTrace();
-        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ErrorMessages.DATABASE_ACCESS_EXCEPTION);
-    }
+  @ExceptionHandler(DataAccessException.class)
+  public ResponseEntity<Object> databaseAccessExceptionExceptionHandler(DataAccessException ex) {
+    System.out.println(ex);
+    ex.printStackTrace();
+    return buildErrorResponse(
+        HttpStatus.INTERNAL_SERVER_ERROR, ErrorMessages.DATABASE_ACCESS_EXCEPTION);
+  }
 
-    @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity<Object> productNotFoundExceptionHandler(Exception ex){
-        System.out.println(ex);
-        ex.printStackTrace();
-        return buildErrorResponse(HttpStatus.NOT_FOUND, ErrorMessages.PRODUCT_NOT_FOUND_EXCEPTION);
-    }
+  @ExceptionHandler(ProductNotFoundException.class)
+  public ResponseEntity<Object> productNotFoundExceptionHandler(Exception ex) {
+    System.out.println(ex);
+    ex.printStackTrace();
+    return buildErrorResponse(HttpStatus.NOT_FOUND, ErrorMessages.PRODUCT_NOT_FOUND_EXCEPTION);
+  }
 
-    @ExceptionHandler(ProductExistsException.class)
-    public ResponseEntity<Object> productExistsExceptionHandler(Exception ex){
-        System.out.println(ex);
-        ex.printStackTrace();
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, ErrorMessages.PRODUCT_EXISTS_EXCEPTION);
-    }
+  @ExceptionHandler(ProductExistsException.class)
+  public ResponseEntity<Object> productExistsExceptionHandler(Exception ex) {
+    System.out.println(ex);
+    ex.printStackTrace();
+    return buildErrorResponse(HttpStatus.BAD_REQUEST, ErrorMessages.PRODUCT_EXISTS_EXCEPTION);
+  }
 
-    @ExceptionHandler(DateExpiredException.class)
-    public ResponseEntity<Object> dateExpiredExceptionHandler(Exception ex){
-        System.out.println(ex);
-        ex.printStackTrace();
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, ErrorMessages.DATE_EXPIRED_EXCEPTION);
-    }
+  @ExceptionHandler(DateExpiredException.class)
+  public ResponseEntity<Object> dateExpiredExceptionHandler(Exception ex) {
+    System.out.println(ex);
+    ex.printStackTrace();
+    return buildErrorResponse(HttpStatus.BAD_REQUEST, ErrorMessages.DATE_EXPIRED_EXCEPTION);
+  }
 
-    @ExceptionHandler(WrongManudacturerException.class)
-    public ResponseEntity<Object> wrongManufacturerExceptionHandler(Exception ex){
-        System.out.println(ex);
-        ex.printStackTrace();
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, ErrorMessages.WRONG_MANUFACTURER_EXCEPTION);
-    }
+  @ExceptionHandler(WrongManudacturerException.class)
+  public ResponseEntity<Object> wrongManufacturerExceptionHandler(Exception ex) {
+    System.out.println(ex);
+    ex.printStackTrace();
+    return buildErrorResponse(HttpStatus.BAD_REQUEST, ErrorMessages.WRONG_MANUFACTURER_EXCEPTION);
+  }
 
-    private ResponseEntity<Object> buildErrorResponse(HttpStatus status, String message) {
-        return ResponseEntity.status(status).body(new ExceptionResponse(message,status));
-    }
+  private ResponseEntity<Object> buildErrorResponse(HttpStatus status, String message) {
+    return ResponseEntity.status(status).body(new ExceptionResponse(message, status));
+  }
 }

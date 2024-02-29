@@ -3,7 +3,6 @@ package com.example.pharmacyback.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -11,54 +10,49 @@ import java.util.UUID;
 @Table(name = "manufacturers", schema = "pharmacy")
 public class Manufacturer {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private UUID id;
 
-    @NotBlank
-    private String name;
+  @NotBlank private String name;
 
-    @OneToMany(mappedBy="manufacturer", fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<Product> products;
+  @OneToMany(mappedBy = "manufacturer", fetch = FetchType.LAZY)
+  @JsonIgnore
+  private List<Product> products;
 
-    public Manufacturer() {
-    }
+  public Manufacturer() {}
 
-    public Manufacturer(UUID id, String name) {
-        this.id = id;
-        this.name = name;
-    }
+  public Manufacturer(UUID id, String name) {
+    this.id = id;
+    this.name = name;
+  }
 
-    public UUID getId() {
-        return id;
-    }
+  public UUID getId() {
+    return id;
+  }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+  public void setId(UUID id) {
+    this.id = id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public List<Product> getProducts() {
-        return products;
-    }
+  public List<Product> getProducts() {
+    return products;
+  }
 
-    public void setProducts(List<Product> products) {
-        this.products = products;
-    }
+  public void setProducts(List<Product> products) {
+    this.products = products;
+  }
 
-    @Override
-    public String toString() {
-        return "Manufacturer{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
-    }
+  @Override
+  public String toString() {
+    return "Manufacturer{" + "id=" + id + ", name='" + name + '\'' + '}';
+  }
 }

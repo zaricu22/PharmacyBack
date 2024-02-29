@@ -1,7 +1,6 @@
 package com.example.pharmacyback.dto;
 
 import com.example.pharmacyback.model.Product;
-
 import java.util.List;
 import java.util.UUID;
 
