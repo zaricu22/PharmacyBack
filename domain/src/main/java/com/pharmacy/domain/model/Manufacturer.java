@@ -22,14 +22,15 @@ public class Manufacturer {
     @JsonIgnore
     private List<Product> products;
 
-    public Manufacturer() {
-    }
+    public Manufacturer() {}
 
     public Manufacturer(UUID id, String name) {
         this.id = id;
         this.name = name;
     }
 
+    // Own-created annotation prevent MapStruct from using Setters
+    @Default
     public Manufacturer(UUID id, String name, List<Product> products) {
         this.id = id;
         this.name = name;

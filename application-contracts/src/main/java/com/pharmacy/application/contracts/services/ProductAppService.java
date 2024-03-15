@@ -1,22 +1,22 @@
 package com.pharmacy.application.contracts.services;
 
-import com.pharmacy.domain.model.Product;
+import com.pharmacy.application.contracts.dtos.ProductDTO;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface ProductAppService {
-    public List<Product> getAllProducts();
+    public List<ProductDTO> getAllProducts();
 
-    public List<Product> getProductsPage(int pageNumber, int pageSize, String sortBy, String sortDir);
+    public List<ProductDTO> getProductsPage(int pageNumber, int pageSize, String sortBy, String sortDir);
 
-    public Product getProductById(UUID uuid);
+    public ProductDTO getProductById(UUID uuid);
 
-    public List<Product> getTopOrLeastFiveProductByPrice(String orderDir);
+    public List<ProductDTO> getTopOrLeastFiveProductByPrice(String orderDir);
 
     public void deleteProduct(UUID id);
 
-    public Product insertProduct(Product product);
+    public ProductDTO insertProduct(ProductDTO product);
 
-    public Product updateProduct(UUID uuid, Product product);
+    public ProductDTO updateProduct(UUID uuid, ProductDTO product);
 }

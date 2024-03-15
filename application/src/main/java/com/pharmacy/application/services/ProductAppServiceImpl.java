@@ -1,16 +1,13 @@
 package com.pharmacy.application.services;
 
-
-import com.pharmacy.application.exceptions.errors.ErrorMessages;
-import com.pharmacy.application.exceptions.errors.DateExpiredException;
-import com.pharmacy.application.exceptions.errors.ProductExistsException;
-import com.pharmacy.application.exceptions.errors.ProductNotFoundException;
-import com.pharmacy.application.exceptions.errors.WrongManufacturerException;
-
+import com.pharmacy.application.contracts.dtos.ProductDTO;
+import com.pharmacy.application.contracts.mappers.ProductMapper;
 import com.pharmacy.application.contracts.services.ProductAppService;
+import com.pharmacy.application.exceptions.*;
+import com.pharmacy.domain.model.Product;
 import com.pharmacy.domain.repositories.ManufacturerRepository;
 import com.pharmacy.domain.repositories.ProductRepository;
-import com.pharmacy.domain.model.Product;
+import com.pharmacy.infrastructure.mappers.ProductMapperImpl;
 import com.pharmacy.infrastructure.repositories.ManufacturerRepositoryImpl;
 import com.pharmacy.infrastructure.repositories.ProductRepositoryImpl;
 import org.springframework.data.domain.PageRequest;
@@ -27,17 +24,24 @@ public class ProductAppServiceImpl implements ProductAppService {
 
     private final ManufacturerRepository manufacturerRepository;
 
+    private final ProductMapper productMapper;
+
     public ProductAppServiceImpl(
-            ProductRepositoryImpl productRepositoryImpl, ManufacturerRepositoryImpl manufacturerRepositoryImpl) {
+            ProductRepositoryImpl productRepositoryImpl,
+            ManufacturerRepositoryImpl manufacturerRepositoryImpl,
+            ProductMapperImpl productMapperImpl)
+    {
         this.productRepository = productRepositoryImpl;
         this.manufacturerRepository = manufacturerRepositoryImpl;
+        this.productMapper = productMapperImpl;
     }
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<ProductDTO> getAllProducts() {
+        List<Product> productList = productRepository.findAll();
+        return productMapper.toDto(productList);
     }
 
-    public List<Product> getProductsPage(
+    public List<ProductDTO> getProductsPage(
             int pageNumber, int pageSize, String sortBy, String sortDir) {
         Sort.Direction dir;
         Pageable pageable;
@@ -51,21 +55,28 @@ public class ProductAppServiceImpl implements ProductAppService {
         } else {
             pageable = PageRequest.of(pageNumber, pageSize);
         }
-        return productRepository.findAll(pageable).getContent();
+        List<Product> productList = productRepository.findAll(pageable).getContent();
+        return productMapper.toDto(productList);
     }
 
-    public Product getProductById(UUID uuid) {
-        return productRepository
-            .findById(uuid)
-            .orElseThrow(() -> new ProductNotFoundException(ErrorMessages.PRODUCT_NOT_FOUND_EXCEPTION));
+    public ProductDTO getProductById(UUID uuid) {
+
+        Product product = productRepository
+                .findById(uuid)
+                .orElseThrow(() -> new ProductNotFoundException(ErrorMessages.PRODUCT_NOT_FOUND_EXCEPTION));
+        return productMapper.toDto(product);
     }
 
-    public List<Product> getTopOrLeastFiveProductByPrice(String orderDir) {
-        if (Objects.nonNull(orderDir) && orderDir.toLowerCase().contains("top-five"))
-            return productRepository.findFirstFiveOrderByPriceDesc();
-        else if (Objects.nonNull(orderDir) && orderDir.toLowerCase().contains("least-five"))
-            return productRepository.findFirstFiveOrderByPriceAsc();
-        else return new ArrayList<Product>();
+    public List<ProductDTO> getTopOrLeastFiveProductByPrice(String orderDir) {
+        if (Objects.nonNull(orderDir) && orderDir.toLowerCase().contains("top-five")) {
+            List<Product> productList = productRepository.findFirstFiveOrderByPriceDesc();
+            return productMapper.toDto(productList);
+        }
+        else if (Objects.nonNull(orderDir) && orderDir.toLowerCase().contains("least-five")) {
+            List<Product> productList = productRepository.findFirstFiveOrderByPriceAsc();
+            return productMapper.toDto(productList);
+        }
+        else return new ArrayList<>();
     }
 
     public void deleteProduct(UUID id) {
@@ -74,14 +85,14 @@ public class ProductAppServiceImpl implements ProductAppService {
         else throw new ProductNotFoundException(ErrorMessages.PRODUCT_NOT_FOUND_EXCEPTION);
     }
 
-    public Product insertProduct(Product product) {
-        String name = product.getName();
-        Date expiryDate = product.getExpiryDate();
+    public ProductDTO insertProduct(ProductDTO productDTO) {
+        String name = productDTO.name();
+        Date expiryDate = productDTO.expiryDate();
         Date now = new Date();
         int countExistingProduct = productRepository.countByNameAndExpiryDate(name, expiryDate);
         boolean manufacturerExists =
-                Objects.nonNull(product.getManufacturer().getId())
-                        && manufacturerRepository.existsById(product.getManufacturer().getId());
+                Objects.nonNull(productDTO.manufacturer().id())
+                        && manufacturerRepository.existsById(productDTO.manufacturer().id());
 
         if (countExistingProduct > 0)
           throw new ProductExistsException(ErrorMessages.PRODUCT_EXISTS_EXCEPTION);
@@ -89,16 +100,20 @@ public class ProductAppServiceImpl implements ProductAppService {
           throw new WrongManufacturerException(ErrorMessages.WRONG_MANUFACTURER_EXCEPTION);
         else if (expiryDate.before(now))
           throw new DateExpiredException(ErrorMessages.DATE_EXPIRED_EXCEPTION);
-        else return productRepository.save(product);
+        else {
+            Product unsavedProduct = productMapper.toEntity(productDTO);
+            Product savedProduct = productRepository.save(unsavedProduct);
+            return productMapper.toDto(savedProduct);
+        }
 
     }
 
-    public Product updateProduct(UUID uuid, Product product) {
-        Date expiryDate = product.getExpiryDate();
+    public ProductDTO updateProduct(UUID uuid, ProductDTO productDTO) {
+        Date expiryDate = productDTO.expiryDate();
         Date now = new Date();
         boolean productExists = productRepository.existsById(uuid);
         boolean manufacturerExists =
-                manufacturerRepository.existsById(product.getManufacturer().getId());
+                manufacturerRepository.existsById(productDTO.manufacturer().id());
 
         if (!manufacturerExists)
           throw new WrongManufacturerException(ErrorMessages.WRONG_MANUFACTURER_EXCEPTION);
@@ -106,7 +121,11 @@ public class ProductAppServiceImpl implements ProductAppService {
           throw new DateExpiredException(ErrorMessages.DATE_EXPIRED_EXCEPTION);
         else if (!productExists)
           throw new ProductNotFoundException(ErrorMessages.PRODUCT_NOT_FOUND_EXCEPTION);
-        else return productRepository.save(product);
+        else {
+            Product unsavedProduct = productMapper.toEntity(productDTO);
+            Product savedProduct = productRepository.save(unsavedProduct);
+            return productMapper.toDto(savedProduct);
+        }
     }
 
 }

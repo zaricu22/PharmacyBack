@@ -30,9 +30,10 @@ public class Product {
     @Future
     private Date expiryDate;
 
-    public Product() {
-    }
+    public Product() {}
 
+    // Own-created annotation prevent MapStruct from using Setters
+    @Default
     public Product(UUID id, String name, Manufacturer manufacturer, int price, Date expiryDate) {
         this.id = id;
         this.name = name;
@@ -77,7 +78,7 @@ public class Product {
         return expiryDate;
     }
 
-    public void setExpiryDate(Date expiryDate) {
+    private void setExpiryDate(Date expiryDate) {
         this.expiryDate = expiryDate;
     }
 

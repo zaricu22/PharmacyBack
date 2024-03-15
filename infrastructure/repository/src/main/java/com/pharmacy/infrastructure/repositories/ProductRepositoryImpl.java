@@ -1,7 +1,7 @@
 package com.pharmacy.infrastructure.repositories;
 
-import com.pharmacy.domain.repositories.ProductRepository;
 import com.pharmacy.domain.model.Product;
+import com.pharmacy.domain.repositories.ProductRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
