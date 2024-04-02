@@ -15,19 +15,8 @@
     <version>0.0.1-SNAPSHOT</version>
 
     <modules>
-        <module>domain</module>
-        <module>application</module>
-        <module>infrastructure</module>
-        <module>presentation</module>
-        <module>application-contracts</module>
+        <module>core</module>
+        <module>external</module>
     </modules>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>42.7.1</version>
-        </dependency>
-    </dependencies>
 
 </project>
