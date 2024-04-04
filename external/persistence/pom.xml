@@ -13,6 +13,7 @@
 
     <dependencies>
         <dependency>
+            <!-- mappers interfaces -->
             <groupId>com.pharmacy</groupId>
             <artifactId>application-contracts</artifactId>
             <version>0.0.1-SNAPSHOT</version>
