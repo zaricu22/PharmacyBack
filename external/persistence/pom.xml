@@ -16,6 +16,7 @@
             <!-- mappers interfaces -->
             <groupId>com.pharmacy</groupId>
             <artifactId>application-contracts</artifactId>
+            <!-- transitive dependency: domain -->
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>

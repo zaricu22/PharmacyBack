@@ -16,6 +16,7 @@
         <module>app-main</module>
         <module>persistence</module>
         <module>webapi</module>
+        <module>security</module>
     </modules>
 
     <dependencies>
