@@ -1,7 +1,6 @@
 package com.pharmacy.domain.repositories;
 
 import com.pharmacy.domain.model.Manufacturer;
-import com.pharmacy.domain.model.Product;
 
 import java.util.List;
 import java.util.Optional;

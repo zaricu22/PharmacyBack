@@ -1,7 +1,12 @@
 package com.pharmacy.application.contracts.dtos;
 
+import org.springframework.lang.NonNull;
+
 public class AuthenticationRequest {
+
+    @NonNull
     private String username;
+    @NonNull
     private String password;
 
     public AuthenticationRequest() {

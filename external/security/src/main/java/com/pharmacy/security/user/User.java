@@ -1,6 +1,8 @@
 package com.pharmacy.security.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.springframework.lang.NonNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,30 +18,43 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+    @NonNull
     private String username;
+    @NonNull
     private String password;
+    @NonNull
+    private String email;
+    @NonNull
+    private String firstname;
+    @NonNull
+    private String lastname;
 
+    @NonNull
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Token> tokens;
 
     public User() {
     }
 
-    public User(String username, String password) {
+    public User(
+            @NonNull String username,
+            @NonNull String password,
+            @NonNull String email,
+            @NonNull String firstname,
+            @NonNull String lastname,
+            @NonNull Role role
+    ) {
         this.username = username;
         this.password = password;
-    }
-
-    public User(String username, String password, Role role) {
-        this.username = username;
-        this.password = password;
+        this.email = email;
+        this.firstname = firstname;
+        this.lastname = lastname;
         this.role = role;
-    }
-
-    public User(UUID id, String username, String password) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
+        this.tokens = tokens;
     }
 
     public UUID getId() {

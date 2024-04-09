@@ -25,7 +25,7 @@ public class Product {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "manufacturer", referencedColumnName = "id")
+    @JoinColumn(name = "manufacturer_id", referencedColumnName = "id")
     private Manufacturer manufacturer;
 
     @Min(value = 0)

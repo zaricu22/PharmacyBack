@@ -1,8 +1,8 @@
 package com.pharmacy.persistence.mappers;
 
 import com.pharmacy.application.contracts.dtos.ProductDTO;
-import com.pharmacy.domain.model.Product;
 import com.pharmacy.application.contracts.mappers.ProductMapper;
+import com.pharmacy.domain.model.Product;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.ReportingPolicy;

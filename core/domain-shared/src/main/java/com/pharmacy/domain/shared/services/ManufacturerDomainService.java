@@ -1,10 +1,10 @@
 package com.pharmacy.domain.shared.services;
 
-import com.pharmacy.persistence.repositories.ManufacturerRepositoryImpl;
 import com.pharmacy.domain.exceptions.ErrorMessages;
 import com.pharmacy.domain.exceptions.WrongManufacturerException;
 import com.pharmacy.domain.model.Manufacturer;
 import com.pharmacy.domain.repositories.ManufacturerRepository;
+import com.pharmacy.persistence.repositories.ManufacturerRepositoryImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;

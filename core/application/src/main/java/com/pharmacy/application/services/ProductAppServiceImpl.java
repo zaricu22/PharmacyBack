@@ -5,19 +5,23 @@ import com.pharmacy.application.contracts.dtos.ProductDTO;
 import com.pharmacy.application.contracts.dtos.UpdateProductDTO;
 import com.pharmacy.application.contracts.mappers.ProductMapper;
 import com.pharmacy.application.contracts.services.ProductAppService;
+import com.pharmacy.domain.exceptions.ErrorMessages;
 import com.pharmacy.domain.exceptions.ProductNotFoundException;
-import com.pharmacy.domain.exceptions.*;
+import com.pharmacy.domain.exceptions.WrongManufacturerException;
 import com.pharmacy.domain.model.Product;
 import com.pharmacy.domain.repositories.ProductRepository;
+import com.pharmacy.domain.shared.services.ProductDomainService;
 import com.pharmacy.persistence.mappers.ProductMapperImpl;
 import com.pharmacy.persistence.repositories.ProductRepositoryImpl;
-import com.pharmacy.domain.shared.services.ProductDomainService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 @Service
 public class ProductAppServiceImpl implements ProductAppService {

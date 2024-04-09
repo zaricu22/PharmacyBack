@@ -1,9 +1,9 @@
 package com.pharmacy.application.contracts.mappers;
 
-import com.pharmacy.domain.model.Manufacturer;
 import com.pharmacy.application.contracts.dtos.ManufacturerDTO;
 import com.pharmacy.application.contracts.dtos.ManufacturerProductsCountDTO;
 import com.pharmacy.application.contracts.dtos.ManufacturerProductsDTO;
+import com.pharmacy.domain.model.Manufacturer;
 
 import java.util.List;
 

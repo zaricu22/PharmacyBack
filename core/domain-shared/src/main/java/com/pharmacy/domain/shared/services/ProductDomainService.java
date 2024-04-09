@@ -1,10 +1,12 @@
 package com.pharmacy.domain.shared.services;
 
-import com.pharmacy.persistence.repositories.ProductRepositoryImpl;
+import com.pharmacy.domain.exceptions.ErrorMessages;
+import com.pharmacy.domain.exceptions.ProductExistsException;
+import com.pharmacy.domain.exceptions.ProductNotFoundException;
 import com.pharmacy.domain.model.Manufacturer;
 import com.pharmacy.domain.model.Product;
 import com.pharmacy.domain.repositories.ProductRepository;
-import com.pharmacy.domain.exceptions.*;
+import com.pharmacy.persistence.repositories.ProductRepositoryImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
