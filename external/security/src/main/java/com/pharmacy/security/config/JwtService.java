@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.impl.lang.Function;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -17,52 +18,45 @@ import java.util.Map;
 public class JwtService {
 
     // 256-bit HEXDEC
-    private static final String SECRETE_KEY = "D3saLo5vgxWtBEZ/J1/QIgIsFgCuRx0EMm9/zTxcTX4=";
+    @Value("${application.security.jwt.secrete-key}")
+    private String secreteKey;
+    @Value("${application.security.jwt.access-token-expiration}")
+    private long jwtAccessExpiration;
+    @Value("${application.security.jwt.refresh-token-expiration}")
+    private long jwtRefreshExpiration;
 
     private SecretKey getPublicSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRETE_KEY);
+        byte[] keyBytes = Decoders.BASE64.decode(secreteKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String generateTokenWithExtraClaims(
-            Map<String, Object> extraClaims,
+    public String generateAccessTokenWithoutExtraClaims(
             UserDetails userDetails
     ) {
+        return buildToken(new HashMap<>(), userDetails, jwtAccessExpiration);
+    }
+
+    public String generateRefreshTokenWithoutExtraClaims(
+            UserDetails userDetails
+    ) {
+        return buildToken(new HashMap<>(), userDetails, jwtRefreshExpiration);
+    }
+
+    private String buildToken(
+            Map<String, Object> extraClaims,
+            UserDetails userDetails,
+            long expiration
+    ) {
         return Jwts
-            .builder()
-            .claims()
-            .add(extraClaims)
-            .subject(userDetails.getUsername())
-            .issuedAt(new Date(System.currentTimeMillis()))
-            .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24)) // 24H
-            .and()
-            .signWith(getPublicSigningKey(), Jwts.SIG.HS256)  // GENERATE JWT WITH SECRET_KEY
-            .compact();
-    }
-
-    public String generateTokenWithoutExtraClaims(UserDetails userDetails) {
-        return generateTokenWithExtraClaims(new HashMap<>(), userDetails);
-    }
-
-    private Claims getAllClaimsFromToken(String token) {
-        return Jwts.parser()
-            .verifyWith(getPublicSigningKey())  // VERIFY JWT WITH SECRET_KEY
-            .build()
-            .parseSignedClaims(token)
-            .getPayload();
-    }
-
-    public<T> T extractClaim(String token, Function<Claims, T> claimsREsolver) {
-        final Claims claims = getAllClaimsFromToken(token);
-        return claimsREsolver.apply(claims);
-    }
-
-    public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject); // ONLY 'SUBJECT' PROPERTY OF JWT
-    }
-
-    private Date extracExpiration(String token) {
-        return extractClaim(token, Claims::getExpiration); // ONLY 'EXPIRATION' PROPERTY OF JWT
+                .builder()
+                .claims()
+                .add(extraClaims)
+                .subject(userDetails.getUsername())
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + expiration))
+                .and()
+                .signWith(getPublicSigningKey(), Jwts.SIG.HS256)  // GENERATE JWT WITH SECRET_KEY
+                .compact();
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
@@ -71,6 +65,28 @@ public class JwtService {
     }
 
     private boolean isTokenExpired(String token) {
-        return extracExpiration(token).before(new Date());
+        return extractExpiration(token).before(new Date());
     }
+
+    public String extractUsername(String token) {
+        return extractClaim(token, Claims::getSubject); // ONLY 'SUBJECT' PROPERTY OF JWT
+    }
+
+    private Date extractExpiration(String token) {
+        return extractClaim(token, Claims::getExpiration); // ONLY 'EXPIRATION' PROPERTY OF JWT
+    }
+
+    public<T> T extractClaim(String token, Function<Claims, T> claimsREsolver) {
+        final Claims claims = getAllClaimsFromToken(token);
+        return claimsREsolver.apply(claims);
+    }
+
+    private Claims getAllClaimsFromToken(String token) {    // throws ExpiredJwtException
+        return Jwts.parser()
+                .verifyWith(getPublicSigningKey())  // VERIFY JWT WITH SECRET_KEY
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+    }
+
 }

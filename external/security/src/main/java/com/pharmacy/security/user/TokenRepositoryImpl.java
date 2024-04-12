@@ -16,6 +16,13 @@ public interface TokenRepositoryImpl extends JpaRepository<Token, UUID> {
     @Query("""
         select t 
         from Token t inner join User u on t.user.id = u.id 
+        where t.tokenType = 'BEARER_ACCESS' and u.id = :userId and (t.expired = false or t.revoked = false)    
+    """)
+    Token findAccessTokenByUser(UUID userId);
+
+    @Query("""
+        select t 
+        from Token t inner join User u on t.user.id = u.id 
         where u.id = :userId and (t.expired = false or t.revoked = false)    
     """)
     List<Token> findAllValidTokensByUser(UUID userId);

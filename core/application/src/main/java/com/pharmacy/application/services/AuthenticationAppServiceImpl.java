@@ -8,6 +8,7 @@ import com.pharmacy.security.config.JwtService;
 import com.pharmacy.security.user.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -46,26 +47,60 @@ public class AuthenticationAppServiceImpl implements AuthenticationAppService {
             request.getLastname(),
             Role.USER
         );
-        User savedUser = userRepository.save(user);
-        String jwtToken = jwtService.generateTokenWithoutExtraClaims(user);
-        saveUserToken(savedUser, jwtToken);
-        return new AuthenticationResponse(jwtToken);
+        userRepository.save(user);
+        return null;
     }
 
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        authManager.authenticate(
+        Authentication authentication = authManager.authenticate(
             new UsernamePasswordAuthenticationToken(
                 request.getUsername(),
                 request.getPassword()
             )
         );
-        User user = userRepository.findByUsername(request.getUsername())
-             .orElseThrow();
-        String jwtToken = jwtService.generateTokenWithoutExtraClaims(user);
-        revokeAllUserTokens(user);
-        saveUserToken(user, jwtToken);
-        return new AuthenticationResponse(jwtToken);
+        if (authentication.isAuthenticated()) {
+            User user = userRepository.findByUsername(request.getUsername())
+                    .orElseThrow();
+            String jwtAccessToken = jwtService.generateAccessTokenWithoutExtraClaims(user);
+            String jwtRefreshToken = jwtService.generateRefreshTokenWithoutExtraClaims(user);
+            revokeAllUserTokens(user);
+            saveUserToken(user, TokenType.BEARER_ACCESS, jwtAccessToken);
+            saveUserToken(user, TokenType.BEARER_REFRESH, jwtRefreshToken);
+            return new AuthenticationResponse(jwtAccessToken, jwtRefreshToken);
+        }
+        return null;
+    }
+
+    @Override
+    public AuthenticationResponse refreshToken(String authotizationHeader) {
+        final String jwtRefreshToken;
+        final String username;
+        if(authotizationHeader == null || !authotizationHeader.startsWith("Bearer ")) {
+            return null;
+        }
+        jwtRefreshToken = authotizationHeader.substring(7);
+        username = jwtService.extractUsername(jwtRefreshToken);
+        if (username != null) {
+            User user = this.userRepository.findByUsername(username)
+                    .orElseThrow();
+            if (jwtService.isTokenValid(jwtRefreshToken, user)) {
+                String jwtAccessToken = jwtService.generateAccessTokenWithoutExtraClaims(user);
+                // once the refresh token is used, we should provide new one
+                String newJwtRefreshToken = jwtService.generateRefreshTokenWithoutExtraClaims(user);
+                revokeAllUserTokens(user);
+                saveUserToken(user, TokenType.BEARER_ACCESS, jwtAccessToken);
+                saveUserToken(user, TokenType.BEARER_REFRESH, newJwtRefreshToken);
+                AuthenticationResponse authResponse = new AuthenticationResponse(jwtAccessToken, newJwtRefreshToken);
+                return authResponse;
+            }
+        }
+        return null;
+    }
+
+    private void saveUserToken(User user, TokenType tokenType, String jwtToken) {
+        Token token = new Token(jwtToken, tokenType, false, false, user);
+        tokenRepository.save(token);
     }
 
     private void revokeAllUserTokens(User user) {
@@ -78,11 +113,5 @@ public class AuthenticationAppServiceImpl implements AuthenticationAppService {
         });
         tokenRepository.saveAll(validTokens);
     }
-
-    private void saveUserToken(User user, String jwtToken) {
-        Token token = new Token(jwtToken, TokenType.BEARER, false, false, user);
-        tokenRepository.save(token);
-    }
-
 
 }

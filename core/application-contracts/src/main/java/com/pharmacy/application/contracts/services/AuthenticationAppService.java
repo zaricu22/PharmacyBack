@@ -7,4 +7,5 @@ import com.pharmacy.application.contracts.dtos.RegisterRequest;
 public interface AuthenticationAppService {
     public AuthenticationResponse register (RegisterRequest request);
     public AuthenticationResponse authenticate(AuthenticationRequest request);
+    public AuthenticationResponse refreshToken(String authorizationHeader);
 }
