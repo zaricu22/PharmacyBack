@@ -81,6 +81,42 @@ public class User implements UserDetails {
         this.password = password;
     }
 
+    @NonNull
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(@NonNull String email) {
+        this.email = email;
+    }
+
+    @NonNull
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(@NonNull String firstname) {
+        this.firstname = firstname;
+    }
+
+    @NonNull
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(@NonNull String lastname) {
+        this.lastname = lastname;
+    }
+
+    @NonNull
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(@NonNull Role role) {
+        this.role = role;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));

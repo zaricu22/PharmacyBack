@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pharmacy.application.contracts.dtos.AuthenticationRequest;
 import com.pharmacy.application.contracts.dtos.AuthenticationResponse;
 import com.pharmacy.application.contracts.dtos.RegisterRequest;
+import com.pharmacy.application.contracts.dtos.RegisterResponse;
 import com.pharmacy.application.services.AuthenticationAppServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -27,7 +28,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(
+    public ResponseEntity<RegisterResponse> register(
             @RequestBody RegisterRequest request
     ) {
         return ResponseEntity.ok(authAppService.register(request));

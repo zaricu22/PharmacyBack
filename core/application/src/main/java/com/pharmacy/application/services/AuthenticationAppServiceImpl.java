@@ -3,6 +3,7 @@ package com.pharmacy.application.services;
 import com.pharmacy.application.contracts.dtos.AuthenticationRequest;
 import com.pharmacy.application.contracts.dtos.AuthenticationResponse;
 import com.pharmacy.application.contracts.dtos.RegisterRequest;
+import com.pharmacy.application.contracts.dtos.RegisterResponse;
 import com.pharmacy.application.contracts.services.AuthenticationAppService;
 import com.pharmacy.security.config.JwtService;
 import com.pharmacy.security.user.*;
@@ -38,7 +39,7 @@ public class AuthenticationAppServiceImpl implements AuthenticationAppService {
     }
 
     @Override
-    public AuthenticationResponse register(RegisterRequest request) {
+    public RegisterResponse register(RegisterRequest request) {
         User user = new User(
             request.getUsername(),
             passwordEncoder.encode(request.getPassword()),
@@ -47,8 +48,8 @@ public class AuthenticationAppServiceImpl implements AuthenticationAppService {
             request.getLastname(),
             Role.USER
         );
-        userRepository.save(user);
-        return null;
+        User u = userRepository.save(user);
+        return new RegisterResponse(u.getUsername(),u.getPassword(),u.getEmail(), u.getFirstname(), u.getLastname());
     }
 
     @Override
