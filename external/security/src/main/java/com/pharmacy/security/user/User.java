@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "users", schema = "pharmacy")
+@Table(name = "users", schema = "public")
 public class User implements UserDetails {
 
     @Id

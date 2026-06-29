@@ -11,7 +11,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@Table(name = "manufacturers", schema = "pharmacy")
+@Table(name = "manufacturers", schema = "public")
 public class Manufacturer {
 
     @Id

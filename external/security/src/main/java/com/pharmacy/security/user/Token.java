@@ -7,7 +7,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@Table(name = "tokens", schema = "pharmacy")
+@Table(name = "tokens", schema = "public")
 public class Token {
 
     @Id
